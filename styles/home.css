@@ -1,0 +1,93 @@
+body {
+	font: "Times New Roman", Times, serif;
+}
+
+#header {
+	margin: 9px 0 30px 0;
+}
+#header #bighead {
+	font-size:245%;
+}
+#header #smallhead {
+	font-size:75%;
+}
+
+#search_container {
+	position:relative;
+	width:900px;
+	height:217px;
+	margin: 0 auto;
+	top:150px;
+	padding:30px;
+	/*background: url('../img/bigbox.png') top left no-repeat; /* for non-css3 browsers */
+	text-align:center;
+}
+
+#searchfor {
+	font-size: 150%;
+	display:inline;
+	padding: 0 8px 0 0;
+}
+
+#searchbar {
+	display:inline;
+}
+
+#searchbar #go {
+	width:45px;
+	height:40px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	
+	-moz-box-shadow: 0px 2px 1px #F8CA00;
+	-webkit-box-shadow: 0px 2px 1px #F8CA00;
+	box-shadow: 0px 2px 1px #F8CA00;
+	
+	border: 1px solid #E97F02;
+	background:url('../img/triangle.png') no-repeat center;
+	position:relative;
+	bottom:2px;
+}
+
+#searchbar #query {
+	width: 515px;
+	height: 36px;
+
+	font-size: 150%;
+	font-family: sans-serif;
+	
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #524f4f;
+	background:#ffffff;
+	
+	-moz-box-shadow: 0px 2px 1px #BD1550;
+	-webkit-box-shadow: 0px 2px 1px #BD1550;
+	box-shadow: 0px 2px 1px #BD1550;
+}
+
+
+#footer {
+	position:relative;
+	top:80px;
+	width:691px;
+	height:100px;
+	margin: 0 auto;
+	text-align:center;
+	font-size:75%;
+	font-family: sans-serif;
+}
+
+a {
+	color:#8A9B0F;
+}
+
+#smiley {
+	width:600px;
+	height:600px;
+	position:absolute;
+	display:none;
+	background: url('../img/smiley.jpg') top center no-repeat;
+	top:10px;
+	width:100%;
+}

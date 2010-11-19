@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Craigsgraph</title>
+		<link rel="stylesheet" href="styles/home.css" type="text/css" media="all">
+		<script src="http://www.google.com/jsapi?key=ABQIAAAA6Ennl4qFhvWkOoljdQVBbRQvSXdoFQAhOQR8gZI1KPGpFPYSXBTMVL6PKL92Sqr-MrY_r412cvLbcQ" type="text/javascript"></script>
+		<script type="text/javascript">
+			google.load("jquery, 1.4.3");
+			google.load("jqueryui, 1.8.5");
+			// Load the Visualization API and the piechart package.
+			
+			//$(document).ready(function(){
+			//   $("#go").click(function(event){
+			//     $("#smiley").show();
+			//   });
+			// });
+		</script>
+    </head>
+    <body>
+    	<form id="search" name="search" method="get" action="search.php">
+		<div id="search_container">
+			<div id="header">
+				<div id="bighead">
+					craigsgraph
+				</div>
+				<div id="smallhead">
+					a visual take on craigslist search
+				</div>
+			</div>
+			
+			<div id="searchbox">
+				<div id="searchfor">
+					search for:
+				</div>
+				
+				<div id="searchbar">
+					<input type="text" name="q" id="query" />
+					<input type="submit" name="" id="go" value=" " />
+				</div>
+				
+				
+			</div>
+
+		</div>
+		<div id="footer">
+			<a href="#">about craigsgraph</a> | <a href="#">privacy policy</a> | <a href="#">example searches</a>
+		</div>
+		</form>
+		<div id="smiley"></div>
+    </body>
+</html>
