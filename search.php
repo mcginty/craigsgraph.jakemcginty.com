@@ -12,38 +12,101 @@ if ($mysqli->connect_error) {
 <link rel="stylesheet" type="text/css" href="styles/search.css" />
 <script src="http://www.google.com/jsapi?key=ABQIAAAA6Ennl4qFhvWkOoljdQVBbRQvSXdoFQAhOQR8gZI1KPGpFPYSXBTMVL6PKL92Sqr-MrY_r412cvLbcQ" type="text/javascript"></script>
 <script type="text/javascript">
-google.load('visualization', '1', {'packages':['annotatedtimeline']});
-google.setOnLoadCallback(drawChart);
-	
-	function drawChart() {
-		var data = new google.visualization.DataTable();
-		data.addColumn('datetime', 'Date Time');
-		data.addColumn('number', 'Price');
-		data.addColumn('string', 'Title');
-		data.addColumn('string', 'Description');
-		
-		data.addRows([
-		<?php 
-			if (empty($_GET['q'])) die('death');
-			file_get_contents("http://craigsgraph.jakemcginty.com/search.php?query={$_GET['q']}");
-			$res = $mysqli->query("SELECT * FROM items WHERE MATCH(title,description) AGAINST ('+({$_GET['q']})' IN BOOLEAN MODE);");
-			if ($row = $res->fetch_assoc()) {
-				$row['title'] = addslashes($row['title']);
-				$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
-				echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
-			}
-			while ($row = $res->fetch_assoc()) {
-				$row['title'] = addslashes($row['title']);
-				echo ",\n";
-				$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
-				echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
-			}
-		?>
-		]);
+	google.load("jquery, 1.4.3");
+	google.load("jqueryui, 1.8.5");
+</script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript">
+var chart;
+$(document).ready(function() {
 
-		var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-		chart.draw(data, {displayAnnotations: false, displayExactValues: true, displayRangeSelector: false});
+	// define the options
+	var options = {
+		chart: {
+			renderTo: 'container',
+			defaultSeriesType: 'area'
+		},
+		title: {
+			text: 'Craigsgraph results'
+		},
+		subtitle: {
+			text: 'Source: chambana.craigslist.org'
+		},
+		xAxis: {
+		},
+		yAxis: {
+			title: {
+				text: 'Price'
+			}
+			labels: {
+				formatter: function() {
+					return '$' + this.value;
+				}
+			}
+		},
+		legend: {
+			enabled: false
+		},
+		tooltip: {
+			formatter: function() {
+	                return '<b>'+ this.series.name +'</b><br/>'+
+					this.x +': $'+ this.y;
+			}
+		},
+		plotOptions: {
+			spline: {
+				cursor: 'pointer',
+				point: {
+					events: {
+						click: function() {
+							hs.htmlExpand(null, {
+								pageOrigin: {
+									x: this.pageX, 
+									y: this.pageY
+								},
+								headingText: this.series.name,
+								maincontentText: 'this.category: '+ this.category +
+									'<br/>this.y: '+ this.y,
+								width: 200
+							});
+						}
+					}
+				}
+			}
+		},
+		series: []
 	}
+	
+	// Load data asynchronously using jQuery. On success, add the data
+	// to the options and initiate the chart.
+	// http://api.jquery.com/jQuery.getJSON/
+	jQuery.getJSON('res_json.php?q=<?php echo $_GET['q']; ?>', null, function(data) {
+		options.series.push({
+			name: 'Tokyo',
+			data: data
+		});
+		
+		chart = new Highcharts.Chart(options);
+	});
+	
+});
+	
+
+if (empty($_GET['q'])) die('death');
+//file_get_contents("http://craigsgraph.jakemcginty.com/search.php?query={$_GET['q']}");
+$res = $mysqli->query("SELECT * FROM items WHERE MATCH(title,description) AGAINST ('+({$_GET['q']})' IN BOOLEAN MODE);");
+if ($row = $res->fetch_assoc()) {
+	$row['title'] = addslashes($row['title']);
+	$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
+	echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
+}
+while ($row = $res->fetch_assoc()) {
+	$row['title'] = addslashes($row['title']);
+	echo ",\n";
+	$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
+	echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
+}
+
 </script>
 </head>
 
@@ -56,7 +119,7 @@ google.setOnLoadCallback(drawChart);
 			<input type="submit" name="" id="go" value=" " />
 		</div>
 	</div>
-	<div id="chart_div" style="width: 500px; height:400px;"></div>
+	<div id="container" style="width: 100%; height:400px;"></div>
 
 	
 </div>
