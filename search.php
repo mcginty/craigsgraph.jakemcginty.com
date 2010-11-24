@@ -1,43 +1,55 @@
 <?php
+require_once("results.json.php");
 
-$mysqli = new mysqli('localhost', 'root', 'JACOB98631', 'craigsgraph');
-if ($mysqli->connect_error) {
-    die('Connect Error (' . $mysqli->connect_errno . ') '
-            . $mysqli->connect_error);
-}
 ?>
 <html>
 <head>
 <title>Items so far</title>
 <link rel="stylesheet" type="text/css" href="styles/search.css" />
-<script src="http://www.google.com/jsapi?key=ABQIAAAA6Ennl4qFhvWkOoljdQVBbRQvSXdoFQAhOQR8gZI1KPGpFPYSXBTMVL6PKL92Sqr-MrY_r412cvLbcQ" type="text/javascript"></script>
-<script type="text/javascript">
-	google.load("jquery, 1.4.3");
-	google.load("jqueryui, 1.8.5");
-</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/base/jquery-ui.css" type="text/css" media="all" />
 <script type="text/javascript" src="js/highcharts.js"></script>
 <script type="text/javascript">
+
+$(function() {
+	$( "#priceslider" ).slider({
+		range: true,
+		min: 0,
+		max: 100000,
+		values: [ 300, 50000 ],
+		slide: function( event, ui ) {
+			$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+			
+		}
+	});
+	$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+		" - $" + $( "#slider-range" ).slider( "values", 1 ) );
+});
+
 var chart;
 $(document).ready(function() {
 
 	// define the options
 	var options = {
 		chart: {
-			renderTo: 'container',
-			defaultSeriesType: 'area'
+			renderTo: 'graph-container',
+			defaultSeriesType: 'line',
 		},
 		title: {
-			text: 'Craigsgraph results'
+			text: 'Craigsgraph Results'
 		},
 		subtitle: {
 			text: 'Source: chambana.craigslist.org'
 		},
 		xAxis: {
+			title: {
+				text: 'Date/Time'
+			}
 		},
 		yAxis: {
 			title: {
 				text: 'Price'
-			}
+			},
 			labels: {
 				formatter: function() {
 					return '$' + this.value;
@@ -54,7 +66,7 @@ $(document).ready(function() {
 			}
 		},
 		plotOptions: {
-			spline: {
+			line: {
 				cursor: 'pointer',
 				point: {
 					events: {
@@ -71,47 +83,39 @@ $(document).ready(function() {
 							});
 						}
 					}
-				}
+				},
+				states: {
+					hover: {
+						enabled: false,
+						lineWidth: 1
+					}
+				},
+				lineWidth: 1,
+				shadow: false
 			}
 		},
-		series: []
+		series: [{
+			name: 'Craigslist Results',
+			marker: {
+				radius: 2
+			},
+			data: eval('<?php echo generateJSON($_GET['q'], array('min'=>0, 'max'=>100000)); ?>')
+		}]
 	}
 	
 	// Load data asynchronously using jQuery. On success, add the data
 	// to the options and initiate the chart.
 	// http://api.jquery.com/jQuery.getJSON/
-	jQuery.getJSON('res_json.php?q=<?php echo $_GET['q']; ?>', null, function(data) {
-		options.series.push({
-			name: 'Tokyo',
-			data: data
-		});
-		
-		chart = new Highcharts.Chart(options);
-	});
-	
-});
-	
 
-if (empty($_GET['q'])) die('death');
-//file_get_contents("http://craigsgraph.jakemcginty.com/search.php?query={$_GET['q']}");
-$res = $mysqli->query("SELECT * FROM items WHERE MATCH(title,description) AGAINST ('+({$_GET['q']})' IN BOOLEAN MODE);");
-if ($row = $res->fetch_assoc()) {
-	$row['title'] = addslashes($row['title']);
-	$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
-	echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
-}
-while ($row = $res->fetch_assoc()) {
-	$row['title'] = addslashes($row['title']);
-	echo ",\n";
-	$row['date'] = date('Y, n, j, H, i', strtotime($row['date']));
-	echo "[new Date({$row['date']}), {$row['price']}, '{$row['title']}', undefined]";
-}
+		
+	chart = new Highcharts.Chart(options);
+});
 
 </script>
 </head>
 
 <body>
-<div id="container">
+<div id="main-container">
 	<div id="header">
 		<div id="title">craigsgraph</div>
 		<div id="searchbar">
@@ -119,7 +123,8 @@ while ($row = $res->fetch_assoc()) {
 			<input type="submit" name="" id="go" value=" " />
 		</div>
 	</div>
-	<div id="container" style="width: 100%; height:400px;"></div>
+	<div id="graph-container" style="width: 800px; height:400px;"></div>
+	<div id="priceslider"></div>
 
 	
 </div>
