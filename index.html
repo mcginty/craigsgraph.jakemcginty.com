@@ -5,18 +5,43 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Craigsgraph</title>
 		<link rel="stylesheet" href="styles/home.css" type="text/css" media="all">
-		<script src="http://www.google.com/jsapi?key=ABQIAAAA6Ennl4qFhvWkOoljdQVBbRQvSXdoFQAhOQR8gZI1KPGpFPYSXBTMVL6PKL92Sqr-MrY_r412cvLbcQ" type="text/javascript"></script>
+		<link type="text/css" href="styles/redmond/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"></script>
 		<script type="text/javascript">
-			google.load("jquery, 1.4.3");
-			google.load("jqueryui, 1.8.5");
-			// Load the Visualization API and the piechart package.
-			
-			//$(document).ready(function(){
-			//   $("#go").click(function(event){
-			//     $("#smiley").show();
-			//   });
-			// });
+
+	$(function() {
+		function log( message ) {
+			$( "<div/>" ).text( message ).prependTo( "#log" );
+			$( "#log" ).attr( "scrollTop", 0 );
+		}
+
+		$( "#query" ).autocomplete({
+			source: "autocomplete.php",
+			minLength: 2,
+			select: function( event, ui ) {
+				log( ui.item ?
+					"Selected: " + ui.item.value + " aka " + ui.item.id :
+					"Nothing selected, input was " + this.value );
+			}
+		});
+	});
+
+
 		</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-322489-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
     </head>
     <body>
     	<form id="search" name="search" method="get" action="search.php">
@@ -35,7 +60,7 @@
 					search for:
 				</div>
 				
-				<div id="searchbar">
+				<div id="searchbar" class="ui-widget">
 					<input type="text" name="q" id="query" />
 					<input type="submit" name="" id="go" value=" " />
 				</div>
@@ -44,10 +69,46 @@
 			</div>
 
 		</div>
-		<div id="footer">
-			<a href="#">about craigsgraph</a> | <a href="#">privacy policy</a> | <a href="#">example searches</a>
-		</div>
 		</form>
-		<div id="smiley"></div>
+		<div id="footer">
+			<a href="#" id="about_open">about craigsgraph</a> | <a href="#" id="privacy_open">privacy policy</a> | <a href="#" id="examples_open">example searches</a>
+		</div>
+		<div id="footers" style="width: 750px; margin: 0 auto; padding-top: 15px;">
+		<div id="privacy" style="display:none;">
+		Thank you for visiting Craigsgraph Web site and reviewing our privacy policy. Our privacy policy is simple: we collect no personal information about you. Visitors will find links from Craisgraph to independently owned, controlled and/or managed World Wide Web or Internet sites whose content we have found of possible interest to our visitors. In many cases, but not always, the links represent cooperative projects or mutual links established with the organizations connected with these sites. While we initially visit these sites to which we directly link, please note that we do not monitor or control the content that appears on these sites and such content may be constantly changing. We recommend that children check with their parents or teachers before clicking off to any new sites, and we encourage all end users of Craigsgraph to read the privacy policies of all linked sites before navigating through them.
+		</div>
+		<div id="about" style="display:none;">
+		<B>Craigsgraph</B> intends to provide a user-friendly product search website that would show the fluctuations in the prices of various articles over time. The software analyzes the data presented at craigslist.com and provide a more organized layout of the data by providing a graphical representation of the various trends witnessed in the prices of various commodities.  This is also followed by a 'Filter' wherein a user can narrow down his search to a more specific requirement based on keyword/prices/timings etc.
+		</div>
+		<div id="examples" style="display:none;">
+		<p>
+		A few things to try:</p>
+		 
+		    <ul>
+		<li> enter any manufacturer (e.g. a car manufacturer)- Toyota
+		    <li> enter a specific product (e.g. a game console)- Nintendo Wii
+		    <li> enter any category or theme- Hair
+		 
+		</ul>
+		</div>
+		</div>
+
+		<script>
+				$('#privacy_open').click(function() {
+			$('#about').hide(300);
+			$('#examples').hide(300);
+			$('#privacy').toggle(300);
+		});
+		$('#about_open').click(function() {
+			$('#about').toggle(300);
+			$('#examples').hide(300);
+			$('#privacy').hide(300);
+		});
+		$('#examples_open').click(function() {
+			$('#about').hide(300);
+			$('#examples').toggle(300);
+			$('#privacy').hide(300);
+		});
+		</script>
     </body>
 </html>
